@@ -1,0 +1,30 @@
+name: Daily Contribution Bot
+
+on:
+  schedule:
+    # Runs at 8:00 AM and 8:00 PM UTC every day
+    - cron: '0 8,20 * * *'
+  workflow_dispatch: # Allows you to run it manually
+
+jobs:
+  auto_commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Grants permission to push code
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Generate Commits
+        run: |
+          git config --global user.name "rickytabe"
+          git config --global user.email "rickytabe2@gmail.com"
+          
+          # Loop to create 20 commits
+          for i in {1..20}; do
+            echo "Commit $i on $(date)" >> activity.log
+            git add activity.log
+            git commit -m "Automated update: $(date +'%Y-%m-%d %H:%M:%S')"
+          done
+          
+          git push
